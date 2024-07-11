@@ -1,4 +1,4 @@
- /root/.m2/repository/com/mycompany/app/my-app/1/my-app-1.jarpipeline {
+pipeline {
     agent any
     stages {
         stage('build somefiles') {
