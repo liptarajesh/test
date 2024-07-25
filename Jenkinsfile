@@ -1,18 +1,38 @@
 pipeline {
-    agent any
+    agent any  // Executes the pipeline on any available agent (node)
+
     stages {
-        stage('build somefiles') {
+        stage('Checkout') {
             steps {
-                sh 'mvn install'
-                sh 'sudo cp -r /root/.m2/repository/com/mycompany/app/my-app/1/my-app-1.jar /root/'
-            }
-        }
-	  stage('Deploy') {
-             steps {
-                sh 'sudo docker build -t sureshimage2 .'
-                sh 'sudo docker container run -itd --name mybuildcontainer sureshimage2:latest'
+                git 'https://github.com/your-repo.git'  // Replace with your Git repository URL
             }
         }
 
-     }
- }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'  // Example Maven build command
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'  // Example Maven test command
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'bash deploy.sh'  // Example deployment script
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded! This is where you can send notifications.'
+        }
+        failure {
+            echo 'Pipeline failed! This is where you can handle failure cases.'
+        }
+    }
+}
